@@ -1252,6 +1252,9 @@ class CompletionResponse(OpenAIBaseModel):
     usage: UsageInfo
     kv_transfer_params: Optional[dict[str, Any]] = Field(
         default=None, description="KVTransfer parameters.")
+    finished_stats: Optional[list[FinishedRequestStats]] = Field(
+        default=None, description="Finished request stats list."
+    )
 
 
 class CompletionResponseStreamChoice(OpenAIBaseModel):
@@ -1443,6 +1446,9 @@ class ChatCompletionResponse(OpenAIBaseModel):
     prompt_logprobs: Optional[list[Optional[dict[int, Logprob]]]] = None
     kv_transfer_params: Optional[dict[str, Any]] = Field(
         default=None, description="KVTransfer parameters.")
+    finished_stats: Optional[list[FinishedRequestStats]] = Field(
+        default=None, description="Finished request stats list."
+    )
 
 
 class DeltaMessage(OpenAIBaseModel):

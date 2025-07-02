@@ -367,7 +367,7 @@ class OutputProcessor:
                 else:
                     # LLMEngine: return list of RequestOutputs.
                     request_outputs.append(request_output)
-
+                
             # Free completed requests.
             if finish_reason is not None:
                 self.request_states.pop(req_id)
@@ -383,6 +383,9 @@ class OutputProcessor:
                 # Track per-request stats
                 self._update_stats_from_finished(req_state, finish_reason,
                                                  iteration_stats)
+                if request_output and iteration_stats and hasattr(iteration_stats, "finished_requests"):
+                    request_output.finished_stats = iteration_stats.finished_requests
+                    
 
         self.lora_states.update_iteration_stats(iteration_stats)
 

@@ -14,8 +14,14 @@ from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
 from vllm.multimodal.inputs import MultiModalPlaceholderDict
 from vllm.sampling_params import RequestOutputKind
-from vllm.sequence import (PromptLogprobs, RequestMetrics, SampleLogprobs,
-                           SequenceGroup, SequenceGroupBase, SequenceStatus)
+from vllm.sequence import (
+    PromptLogprobs,
+    RequestMetrics,
+    SampleLogprobs,
+    SequenceGroup,
+    SequenceGroupBase,
+    SequenceStatus,
+)
 
 logger = init_logger(__name__)
 
@@ -125,6 +131,7 @@ class RequestOutput:
         if kwargs:
             logger.warning_once("RequestOutput: Ignoring extra arguments: %s",
                                 str(kwargs))
+        self.finished_stats = None
         self.request_id = request_id
         self.prompt = prompt
         self.prompt_token_ids = prompt_token_ids
