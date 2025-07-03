@@ -10,8 +10,11 @@ from vllm.inputs import ProcessorInputs, PromptType, SingletonInputs
 from vllm.inputs.parse import split_enc_dec_inputs
 from vllm.inputs.preprocess import InputPreprocessor
 from vllm.lora.request import LoRARequest
-from vllm.multimodal import (MULTIMODAL_REGISTRY, MultiModalKwargs,
-                             MultiModalRegistry)
+from vllm.multimodal import (
+    MULTIMODAL_REGISTRY,
+    MultiModalKwargs,
+    MultiModalRegistry,
+)
 from vllm.multimodal.inputs import PlaceholderRange
 from vllm.multimodal.processing import EncDecMultiModalProcessor
 from vllm.multimodal.utils import merge_and_sort_multimodal_metadata
@@ -21,10 +24,8 @@ from vllm.sampling_params import SamplingParams
 from vllm.transformers_utils.tokenizer_group import TokenizerGroup
 from vllm.v1.engine import EngineCoreRequest
 from vllm.v1.engine.mm_input_cache import MirroredProcessingCache
-from vllm.v1.structured_output.backend_guidance import (
-    validate_guidance_grammar)
-from vllm.v1.structured_output.backend_xgrammar import (
-    validate_xgrammar_grammar)
+from vllm.v1.structured_output.backend_guidance import validate_guidance_grammar
+from vllm.v1.structured_output.backend_xgrammar import validate_xgrammar_grammar
 
 
 class Processor:

@@ -16,33 +16,55 @@ from pydantic import TypeAdapter
 
 from vllm.config import ModelConfig
 from vllm.engine.protocol import EngineClient
-from vllm.entrypoints.chat_utils import (ChatTemplateContentFormatOption,
-                                         ConversationMessage,
-                                         random_tool_call_id)
+from vllm.entrypoints.chat_utils import (
+    ChatTemplateContentFormatOption,
+    ConversationMessage,
+    random_tool_call_id,
+)
 from vllm.entrypoints.logger import RequestLogger
 from vllm.entrypoints.openai.protocol import (
-    ChatCompletionLogProb, ChatCompletionLogProbs,
-    ChatCompletionLogProbsContent, ChatCompletionNamedToolChoiceParam,
-    ChatCompletionRequest, ChatCompletionResponse,
-    ChatCompletionResponseChoice, ChatCompletionResponseStreamChoice,
-    ChatCompletionStreamResponse, ChatMessage, DeltaFunctionCall, DeltaMessage,
-    DeltaToolCall, ErrorResponse, FunctionCall, FunctionDefinition,
-    PromptTokenUsageInfo, RequestResponseMetadata, ToolCall, UsageInfo)
-from vllm.entrypoints.openai.serving_engine import (OpenAIServing,
-                                                    clamp_prompt_logprobs)
+    ChatCompletionLogProb,
+    ChatCompletionLogProbs,
+    ChatCompletionLogProbsContent,
+    ChatCompletionNamedToolChoiceParam,
+    ChatCompletionRequest,
+    ChatCompletionResponse,
+    ChatCompletionResponseChoice,
+    ChatCompletionResponseStreamChoice,
+    ChatCompletionStreamResponse,
+    ChatMessage,
+    DeltaFunctionCall,
+    DeltaMessage,
+    DeltaToolCall,
+    ErrorResponse,
+    FinishReason,
+    FunctionCall,
+    FunctionDefinition,
+    PromptTokenUsageInfo,
+    RequestResponseMetadata,
+    ToolCall,
+    UsageInfo,
+)
+from vllm.entrypoints.openai.serving_engine import (
+    OpenAIServing,
+    clamp_prompt_logprobs,
+)
 from vllm.entrypoints.openai.serving_models import OpenAIServingModels
 from vllm.entrypoints.openai.tool_parsers import ToolParser, ToolParserManager
 from vllm.entrypoints.openai.tool_parsers.mistral_tool_parser import (
-    MistralToolCall)
+    MistralToolCall,
+)
 from vllm.logger import init_logger
 from vllm.outputs import CompletionOutput, RequestOutput
 from vllm.reasoning import ReasoningParser, ReasoningParserManager
 from vllm.sampling_params import BeamSearchParams, SamplingParams
 from vllm.sequence import Logprob
 from vllm.transformers_utils.tokenizer import AnyTokenizer, MistralTokenizer
-from vllm.transformers_utils.tokenizers import (maybe_serialize_tool_calls,
-                                                truncate_tool_call_ids,
-                                                validate_request_params)
+from vllm.transformers_utils.tokenizers import (
+    maybe_serialize_tool_calls,
+    truncate_tool_call_ids,
+    validate_request_params,
+)
 
 logger = init_logger(__name__)
 
