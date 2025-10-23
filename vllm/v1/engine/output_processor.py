@@ -21,6 +21,7 @@ from vllm.v1.engine.logprobs import LogprobsProcessor
 from vllm.v1.engine.parallel_sampling import ParentRequest
 from vllm.v1.metrics.stats import (IterationStats, LoRARequestStates,
                                    RequestStateStats)
+from zmq import has
 
 
 class RequestOutputCollector:
@@ -454,6 +455,9 @@ class OutputProcessor:
                 # Track per-request stats
                 self._update_stats_from_finished(req_state, finish_reason,
                                                  iteration_stats)
+                if request_output and iteration_stats and hasattr(iteration_stats, "finished_requests"):
+                    request_output.finished_stats = iteration_stats.finished_requests
+                    
                 if self.tracer:
                     self.do_tracing(engine_core_output, req_state,
                                     iteration_stats)

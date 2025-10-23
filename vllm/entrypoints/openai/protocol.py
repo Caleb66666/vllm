@@ -48,6 +48,7 @@ from vllm.pooling_params import PoolingParams
 from vllm.sampling_params import (BeamSearchParams, GuidedDecodingParams,
                                   RequestOutputKind, SamplingParams)
 from vllm.utils import random_uuid, resolve_obj_by_qualname
+from vllm.v1.metrics.stats import FinishedRequestStats
 
 logger = init_logger(__name__)
 
@@ -1592,6 +1593,9 @@ class CompletionResponse(OpenAIBaseModel):
     # vLLM-specific fields that are not in OpenAI spec
     kv_transfer_params: Optional[dict[str, Any]] = Field(
         default=None, description="KVTransfer parameters.")
+    finished_stats: Optional[list[FinishedRequestStats]] = Field(
+        default=None,
+        description="Finished stats for each request in the batch.")
 
 
 class CompletionResponseStreamChoice(OpenAIBaseModel):
@@ -1785,6 +1789,14 @@ class ChatCompletionResponseChoice(OpenAIBaseModel):
     # in agent scenarios
     token_ids: Optional[list[int]] = None
 
+"""
+原因分析
+Pydantic V2 要求前向引用（forward references）必须显式重建
+ChatCompletionResponse 引用了未在编译时定义的 FinishReason
+model_rebuild() 会重新解析所有类型注解，解决依赖关系
+"""
+class FinishReason(BaseModel):
+    reason: Literal["stop", "length", "tool_calls", "content_filter"]
 
 class ChatCompletionResponse(OpenAIBaseModel):
     id: str = Field(default_factory=lambda: f"chatcmpl-{random_uuid()}")
@@ -1802,7 +1814,11 @@ class ChatCompletionResponse(OpenAIBaseModel):
     prompt_token_ids: Optional[list[int]] = None
     kv_transfer_params: Optional[dict[str, Any]] = Field(
         default=None, description="KVTransfer parameters.")
+    finished_stats: Optional[list[FinishedRequestStats]] = Field(
+        default=None, description="Finished request stats list."
+    )
 
+ChatCompletionResponse.model_rebuild()
 
 class DeltaMessage(OpenAIBaseModel):
     role: Optional[str] = None
