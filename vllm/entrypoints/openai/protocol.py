@@ -59,6 +59,7 @@ from vllm.pooling_params import PoolingParams
 from vllm.sampling_params import (BeamSearchParams, RequestOutputKind,
                                   SamplingParams, StructuredOutputsParams)
 from vllm.utils import random_uuid, resolve_obj_by_qualname
+from vllm.v1.metrics.stats import FinishedRequestStats
 
 logger = init_logger(__name__)
 
@@ -1676,6 +1677,10 @@ class CompletionResponse(OpenAIBaseModel):
     # vLLM-specific fields that are not in OpenAI spec
     kv_transfer_params: Optional[dict[str, Any]] = Field(
         default=None, description="KVTransfer parameters.")
+    
+    finished_stats: Optional[list[FinishedRequestStats]] = Field(
+        default=None, 
+        description="Finished request stats list")
 
 
 class CompletionResponseStreamChoice(OpenAIBaseModel):
@@ -1869,6 +1874,8 @@ class ChatCompletionResponseChoice(OpenAIBaseModel):
     # in agent scenarios
     token_ids: Optional[list[int]] = None
 
+class FinishReason(BaseModel):
+    reason: Literal["stop", "length", "tool_calls", "content_filter"]
 
 class ChatCompletionResponse(OpenAIBaseModel):
     id: str = Field(default_factory=lambda: f"chatcmpl-{random_uuid()}")
@@ -1887,6 +1894,11 @@ class ChatCompletionResponse(OpenAIBaseModel):
     kv_transfer_params: Optional[dict[str, Any]] = Field(
         default=None, description="KVTransfer parameters.")
 
+    finished_stats: Optional[list[FinishedRequestStats]] = Field(
+        default=None, 
+        description="Finished request stats list")
+
+ChatCompletionResponse.model_rebuild()
 
 class DeltaMessage(OpenAIBaseModel):
     role: Optional[str] = None

@@ -592,6 +592,10 @@ class OpenAIServingCompletion(OpenAIServing):
         request_metadata.final_usage_info = usage
         if final_res_batch:
             kv_transfer_params = final_res_batch[0].kv_transfer_params
+            final_res_fs = final_res_batch[0].finished_stats
+        else:
+            final_res_fs = None
+
         return CompletionResponse(
             id=request_id,
             created=created_time,
@@ -599,6 +603,7 @@ class OpenAIServingCompletion(OpenAIServing):
             choices=choices,
             usage=usage,
             kv_transfer_params=kv_transfer_params,
+            finished_stats=final_res_fs,
         )
 
     def _create_completion_logprobs(
